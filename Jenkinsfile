@@ -16,7 +16,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Building Docker image..."
-                sh 'docker build -t nikhil346/node-cicd-app .'
+                sh 'docker build -t nikhil346/node-cicd-app:may13 .'
             }
         }
 
