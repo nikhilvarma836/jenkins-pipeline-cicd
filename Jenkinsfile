@@ -15,7 +15,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Building Docker image..."
-                sh 'docker build -t $Dockerfile .'
+                sh 'docker build -t nikhil346/my-app .'
             }
         }
 
@@ -28,11 +28,13 @@ pipeline {
 
         stage('Push to DockerHub') {
             steps {
-                withCredentials([string(credentialsId: 'dockerhub-token', variable: 'DOCKERHUB')]) {
-                    sh """
-                        echo "$DOCKERHUB" | docker login -u nikhil346 --password-stdin
-                        docker push $Dockerfile
-                    """
+                echo 'Pushing Docker image to DockerHub...'
+                withCredentials([usernamePassword(credentialsId: "$DOCKER_HUB_CREDENTIALS", usernameVariable: 'nikhil346', passwordVariable: 'DOCKERHUB_TOKEN')]) {
+                    sh '''
+                        echo "$DOCKERHUB_TOKEN" | docker login -u "nikhil346" --password-stdin
+                        docker push nikhil346/my-app
+                    '''
+
                 }
             }
         }
@@ -41,9 +43,8 @@ pipeline {
             steps {
                 echo 'Deploying app locally using Docker...'
                 sh 'docker rm -f my-app || true'
-                sh 'docker run -d -p 8080:8080 --name my-app $Dockerfile'
+                sh 'docker run -d -p 8080:8080 --name my-app nikhil346'
             }
         }
     }
 }
-
