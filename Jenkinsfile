@@ -1,5 +1,5 @@
 pipeline {
-    agent DEVOPS
+    agent any
 
     environment {
         IMAGE_NAME = 'nikhil346/my-app'
