@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = 'nikhil346/my-app'
+        IMAGE_NAME = 'nikhil346/node-cicd-app'
     }
 
     stages {
@@ -15,7 +15,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Building Docker image..."
-                sh 'docker build -t nikhil346/my-app .'
+                sh 'docker build -t nikhil346/node-cicd-app .'
             }
         }
 
@@ -32,7 +32,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: "$DOCKER_HUB_CREDENTIALS", usernameVariable: 'nikhil346', passwordVariable: 'DOCKERHUB_TOKEN')]) {
                     sh '''
                         echo "$DOCKERHUB_TOKEN" | docker login -u "nikhil346" --password-stdin
-                        docker push nikhil346/my-app
+                        docker push nikhil346/node-cicd-app
                     '''
 
                 }
@@ -42,8 +42,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying app locally using Docker...'
-                sh 'docker rm -f my-app || true'
-                sh 'docker run -d -p 8080:8080 --name my-app nikhil346'
+                sh 'docker rm -f node-cicd-app || true'
+                sh 'docker run -d -p 8080:8080 --name node-cicd-app nikhil346'
             }
         }
     }
